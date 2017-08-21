@@ -1,0 +1,9 @@
+import requests
+import re
+headers = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/60.0.3112.78 Chrome/60.0.3112.78 Safari/537.36'}
+content = requests.get('https://book.douban.com/', headers=headers).text
+pattern = re.compile('<li.*?more-meta.*?<h4.*?>(.*?)</h4>.*?author.*?>(.*?)</span>.*?year.*?>(.*?)</span>.*?publisher.*?>(.*?)</span>.*?', re.S)
+results = re.findall(pattern, content)
+for result in results:
+    title, author, year, publisher = result
+    print(title.strip(), author.strip(), year.strip(), publisher.strip())
