@@ -1,0 +1,23 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*- 
+import requests
+from bs4 import BeautifulSoup
+from bs4 import Tag
+headers = {'user-agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/60.0.3112.78 Chrome/60.0.3112.78 Safari/537.36'}
+html = requests.get('https://book.douban.com/', headers = headers).text
+soup = BeautifulSoup(html, 'lxml')
+booklist = soup.find(id="content").find("div", class_="bd").find("div", "slide-list")
+for ul in booklist.children:
+    if isinstance(ul, Tag):
+        for li in ul.children:
+            if isinstance(li, Tag):
+                cover = li.find("div", "cover").find("a")
+                booklink = cover["href"]
+                info = li.find("div","info").find("div", "more-meta")
+                title = info.find(class_ = "title")
+                author = info.find(class_ = "author")
+                year = info.find(class_ = "year")
+                publisher = info.find(class_ = "publisher")
+                abstract = info.find(class_ = "abstract")
+                print(booklink, title.string.strip(), author.string.strip(), year.string.strip(), publisher.string.strip(), abstract.string)
+                
